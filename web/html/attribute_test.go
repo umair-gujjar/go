@@ -9,14 +9,14 @@ import (
 )
 
 func TestNewAttr(t *testing.T) {
-    a := NewAttr("name", "value")
+    a := newAttr("name", "value")
     if a.GetName() != "name" || a.GetVal() != "value" {
         t.Errorf("Error creating an attribute")
     }
 }
 
 func TestSetName(t *testing.T) {
-    a := NewAttr("name", "value")
+    a := newAttr("name", "value")
     a.SetName("name_test")
     if a.GetName() != "name_test" {
         t.Errorf("Name set")
@@ -24,14 +24,14 @@ func TestSetName(t *testing.T) {
 }
 
 func TestGetName(t *testing.T) {
-    a := NewAttr("name_test", "value")
+    a := newAttr("name_test", "value")
     if a.GetName() != "name_test" {
         t.Errorf("Name get")
     }
 }
 
 func TestSetVal(t *testing.T) {
-    a := NewAttr("name", "value")
+    a := newAttr("name", "value")
     a.SetVal("val_test")
     if a.GetVal() != "val_test" {
         t.Errorf("Value set")
@@ -39,7 +39,7 @@ func TestSetVal(t *testing.T) {
 }
 
 func TestGetVal(t *testing.T) {
-    a := NewAttr("name", "value")
+    a := newAttr("name", "value")
     a.SetVal("val_test")
     if a.GetVal() != "val_test" {
         t.Errorf("No value found")
@@ -47,7 +47,7 @@ func TestGetVal(t *testing.T) {
 }
 
 func TestString(t *testing.T) {
-    a := NewAttr("name", "value")
+    a := newAttr("name", "value")
     if a.String() != `name="value"` {
         t.Errorf("The string attribute is not valid")
     }

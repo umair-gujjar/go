@@ -11,6 +11,3 @@ type Validater interface {
 type Filter interface {
 	Filtered(val interface{}) interface{}
 }
-
-
-

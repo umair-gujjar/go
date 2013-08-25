@@ -13,7 +13,7 @@ type attr struct {
 }
 
 // Creating a new attribute
-func NewAttr(name, val string) *attr {
+func newAttr(name, val string) *attr {
     return &attr{name, val}
 }
 

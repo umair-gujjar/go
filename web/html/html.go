@@ -9,10 +9,10 @@ var DefaultTagType ElemType
 
 func init() {
     DefaultDoctype = HTML5
-    DefaultTagType = TYPE_SELF_CLOSED
+    DefaultTagType = TYPE_TXT
 }
 
-type stringer interface {
+type Stringer interface {
     String() string
 }
 
@@ -21,6 +21,7 @@ type tag struct {
     Doctype
 }
 
-func Tag(name string) *tag {
-    return &tag{newElement(name, TYPE_SELF_CLOSED_NOSLASH), HTML5}
+// Tag returns a new html.Tag to handle
+func NewTag(name string) *tag {
+    return &tag{newElement(name, DefaultTagType), HTML5}
 }
