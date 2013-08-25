@@ -4,49 +4,51 @@
 
 package html
 
-import ("testing")
+import (
+    "testing"
+)
 
 func TestNewAttr(t *testing.T) {
-	a := NewAttr("name", "value")
-	if a.GetName() != "name" || a.GetVal() != "value" {
-		t.Errorf("Error creating an attribute")
-	}
+    a := NewAttr("name", "value")
+    if a.GetName() != "name" || a.GetVal() != "value" {
+        t.Errorf("Error creating an attribute")
+    }
 }
 
 func TestSetName(t *testing.T) {
-	a := NewAttr("name", "value")
-	a.SetName("name_test")
-	if a.GetName() != "name_test" {
-		t.Errorf("Name set")
-	} 
+    a := NewAttr("name", "value")
+    a.SetName("name_test")
+    if a.GetName() != "name_test" {
+        t.Errorf("Name set")
+    }
 }
 
 func TestGetName(t *testing.T) {
-	a := NewAttr("name_test", "value")
-	if a.GetName() != "name_test" {
-		t.Errorf("Name get")
-	}
+    a := NewAttr("name_test", "value")
+    if a.GetName() != "name_test" {
+        t.Errorf("Name get")
+    }
 }
 
 func TestSetVal(t *testing.T) {
-	a := NewAttr("name", "value")
-	a.SetVal("val_test")
-	if a.GetVal() != "val_test" {
-		t.Errorf("Value set")
-	}
+    a := NewAttr("name", "value")
+    a.SetVal("val_test")
+    if a.GetVal() != "val_test" {
+        t.Errorf("Value set")
+    }
 }
 
 func TestGetVal(t *testing.T) {
-	a := NewAttr("name", "value")
-	a.SetVal("val_test")
-	if a.GetVal() != "val_test" {
-		t.Errorf("No value found")
-	}
+    a := NewAttr("name", "value")
+    a.SetVal("val_test")
+    if a.GetVal() != "val_test" {
+        t.Errorf("No value found")
+    }
 }
 
 func TestString(t *testing.T) {
-	a := NewAttr("name", "value")
-	if a.String() != `name="value"` {
-		t.Errorf("The string attribute is not valid")
-	}
+    a := NewAttr("name", "value")
+    if a.String() != `name="value"` {
+        t.Errorf("The string attribute is not valid")
+    }
 }

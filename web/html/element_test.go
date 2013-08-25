@@ -5,16 +5,16 @@
 package html
 
 import (
-    "testing"
     "reflect"
+    "testing"
 )
 
 func TestNewElement(t *testing.T) {
-	e := newElement("div", TYPE_TXT)
+    e := newElement("div", TYPE_TXT)
 
-	t.Errorf("%s", reflect.TypeOf(e).String())
+    t.Errorf("%s", reflect.TypeOf(e).String())
 
-	if e.GetName() == "div" {
-		t.Errorf("")
-	}
+    if e.GetName() == "div" {
+        t.Errorf("")
+    }
 }
