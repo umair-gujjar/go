@@ -65,6 +65,14 @@ func init() {
     // XHTML Basic 1.1
     doctype[XHTML_BASIC_11] = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN"` + eol
     doctype[XHTML_BASIC_11] += `"http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">` + eol
+
+    // MathML 2.0 - DTD
+    doctype[MATH_ML20] = `<!DOCTYPE math PUBLIC "-//W3C//DTD MathML 2.0//EN"` + eol
+    doctype[MATH_ML20] += tab + `"http://www.w3.org/Math/DTD/mathml2/mathml2.dtd">` + eol
+
+    // MathML 1.01 - DTD
+    doctype[MATH_ML_101] = `<!DOCTYPE math SYSTEM ` + eol
+    doctype[MATH_ML_101] += `"http://www.w3.org/Math/DTD/mathml1/mathml.dtd">` + eol
 }
 
 // Returns the doctype by name
