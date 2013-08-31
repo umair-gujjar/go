@@ -7,10 +7,10 @@ package html
 import "fmt"
 
 const (
-    TAG_TXT                 ElemTag = "%s"
-    TAG_CLOSED              ElemTag = "<%s%s>%s</%s>"
-    TAG_SELF_CLOSED 	    ElemTag = "<%s%s>"
-    TAG_SELF_CLOSED_STRICT  ElemTag = "<%s%s/>"
+    TAG_TXT                ElemTag = "%s"
+    TAG_CLOSED             ElemTag = "<%s%s>%s</%s>"
+    TAG_SELF_CLOSED        ElemTag = "<%s%s>"
+    TAG_SELF_CLOSED_STRICT ElemTag = "<%s%s/>"
 )
 
 type Displayer interface {
@@ -31,8 +31,8 @@ func init() {
 }
 
 type Tagger interface {
-	ElementHandler
-	Displayer
+    ElementHandler
+    Displayer
 }
 
 type tag struct {
@@ -46,33 +46,33 @@ func NewTag(name string) *tag {
 }
 
 func (t *tag) SetDoctype(d Doctype) *tag {
-	t.doctype = d
-	return t
+    t.doctype = d
+    return t
 }
 
 func (t tag) GetDoctype() Doctype {
-	return t.doctype
+    return t.doctype
 }
 
 func (t tag) render() string {
     typeElem := t.GetType()
 
-	initAttribs := func() {
-		if t.GetVal() != "" {
-			t.SetAttr("value", t.GetVal())
-		}
-	}
+    initAttribs := func() {
+        if t.GetVal() != "" {
+            t.SetAttr("value", t.GetVal())
+        }
+    }
 
-	getAttrsToString := func() string {
-	    var attrs string
-	    if t.SizeAttrs() > 0 {
-	        for _, attr := range t.GetAttrs() {
-	            attrs += fmt.Sprintf(`%s="%s" `, attr.GetName(), attr.GetVal())
-	        }
-	        attrs = " " + attrs[:(len(attrs)-1)]
-	    }
-	    return attrs
-	}
+    getAttrsToString := func() string {
+        var attrs string
+        if t.SizeAttrs() > 0 {
+            for _, attr := range t.GetAttrs() {
+                attrs += fmt.Sprintf(`%s="%s" `, attr.GetName(), attr.GetVal())
+            }
+            attrs = " " + attrs[:(len(attrs)-1)]
+        }
+        return attrs
+    }
 
     switch tag := string(Tags[typeElem]); typeElem {
     case TYPE_TXT:
@@ -80,18 +80,18 @@ func (t tag) render() string {
     case TYPE_CLOSED:
         return fmt.Sprintf(tag, t.GetName(), getAttrsToString(), t.GetVal(), t.GetName())
     case TYPE_SELF_CLOSED, TYPE_SELF_CLOSED_STRICT:
-    	initAttribs()
+        initAttribs()
         return fmt.Sprintf(tag, t.GetName(), getAttrsToString())
     default:
-    	initAttribs();
+        initAttribs()
         return fmt.Sprintf(string(TAG_SELF_CLOSED), t.GetName(), getAttrsToString())
     }
 }
 
 func Render(tag Tagger) string {
-	return tag.Render()
+    return tag.Render()
 }
 
 func (t tag) Render() string {
-	return t.render()
+    return t.render()
 }
