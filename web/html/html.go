@@ -11,17 +11,3 @@ func init() {
     DefaultDoctype = HTML5
     DefaultTagType = TYPE_TXT
 }
-
-type Stringer interface {
-    String() string
-}
-
-type tag struct {
-    *element
-    Doctype
-}
-
-// Tag returns a new html.Tag to handle
-func NewTag(name string) *tag {
-    return &tag{newElement(name, DefaultTagType), HTML5}
-}

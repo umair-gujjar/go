@@ -4,32 +4,17 @@
 
 package html
 
-import (
-    "fmt"
-)
-
-type ElemTag string
 type ElemType uint16
 
 const (
     TYPE_TXT                 ElemType = 1 << iota
     TYPE_CLOSED              ElemType = 1 << iota
     TYPE_SELF_CLOSED         ElemType = 1 << iota
-    TYPE_SELF_CLOSED_NOSLASH ElemType = 1 << iota
+    TYPE_SELF_CLOSED_STRICT  ElemType = 1 << iota
 )
-
-const (
-    TAG_TXT                 ElemTag = "%s"
-    TAG_CLOSED              ElemTag = "<%s%s>%s</%s>"
-    TAG_SELF_CLOSED         ElemTag = "<%s%s/>"
-    TAG_SELF_CLOSED_NOSLASH ElemTag = "<%s%s>"
-)
-
-// Map of html tags
-var tags map[ElemType]ElemTag
 
 // Represents the interface of a html element
-type Element interface {
+type ElementHandler interface {
     SetName(name string) *element
     GetName() string
     SetAttr(name string, val string) *element
@@ -41,7 +26,8 @@ type Element interface {
     SizeAttrs() int
     SetVal(val string) *element
     GetVal() string
-    Stringer
+    SetType(elemType ElemType) *element
+    GetType() ElemType
 }
 
 type element struct {
@@ -51,16 +37,8 @@ type element struct {
     tagType ElemType
 }
 
-func init() {
-    tags = make(map[ElemType]ElemTag)
-    tags[TYPE_TXT] = TAG_TXT
-    tags[TYPE_CLOSED] = TAG_CLOSED
-    tags[TYPE_SELF_CLOSED] = TAG_SELF_CLOSED
-    tags[TYPE_SELF_CLOSED_NOSLASH] = TAG_SELF_CLOSED_NOSLASH
-}
-
 // Creating a new element
-func newElement(name string, tagType ElemType) *element {
+func NewElement(name string, tagType ElemType) *element {
     return &element{
         name:    name,
         attrs:   make(map[string]*attr),
@@ -81,7 +59,7 @@ func (e element) GetName() string {
 
 // Set an attribute to the current element
 func (e *element) SetAttr(name string, val string) *element {
-    attr := newAttr(name, val)
+    attr := NewAttr(name, val)
     e.attrs[attr.GetName()] = attr
     return e
 }
@@ -100,18 +78,6 @@ func (e element) GetAttrs() []*attr {
     attrs := make([]*attr, 0)
     for _, attr := range e.attrs {
         attrs = append(attrs, attr)
-    }
-    return attrs
-}
-
-// Returns all attributes to string
-func (e element) getAttrsToString() string {
-    var attrs string
-    if e.SizeAttrs() > 0 {
-        for _, attr := range e.GetAttrs() {
-            attrs += attr.String() + " "
-        }
-        attrs = " " + attrs[:(len(attrs)-1)]
     }
     return attrs
 }
@@ -163,28 +129,4 @@ func (e *element) SetType(tagType ElemType) *element {
 // Return the tag type of this element
 func (e element) GetType() ElemType {
     return e.tagType
-}
-
-// Return this element to string
-func (e *element) String() string {
-    typeElem := e.GetType()
-
-    initValAttr := func() {
-        if e.GetVal() != "" {
-            e.SetAttr("value", e.GetVal())
-        }
-    }
-
-    switch tag := string(tags[typeElem]); typeElem {
-    case TYPE_TXT:
-        return fmt.Sprintf(tag, e.GetVal())
-    case TYPE_CLOSED:
-        return fmt.Sprintf(tag, e.GetName(), e.getAttrsToString(), e.GetVal(), e.GetName())
-    case TYPE_SELF_CLOSED, TYPE_SELF_CLOSED_NOSLASH:
-        initValAttr()
-        return fmt.Sprintf(tag, e.GetName(), e.getAttrsToString())
-    default:
-        initValAttr()
-        return fmt.Sprintf(string(TAG_SELF_CLOSED), e.GetName(), e.getAttrsToString())
-    }
 }

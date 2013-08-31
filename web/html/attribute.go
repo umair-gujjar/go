@@ -4,8 +4,6 @@
 
 package html
 
-import "fmt"
-
 // The struct type attr reprensent an html attribute
 type attr struct {
     name string
@@ -13,7 +11,7 @@ type attr struct {
 }
 
 // Creating a new attribute
-func newAttr(name, val string) *attr {
+func NewAttr(name, val string) *attr {
     return &attr{name, val}
 }
 
@@ -37,9 +35,4 @@ func (a *attr) SetVal(val string) *attr {
 // Return the value of this attribute
 func (a attr) GetVal() string {
     return a.val
-}
-
-// Return this attribute to string
-func (a attr) String() string {
-    return fmt.Sprintf(`%s="%s"`, a.GetName(), a.GetVal())
 }
