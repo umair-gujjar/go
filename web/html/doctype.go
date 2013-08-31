@@ -64,7 +64,7 @@ func init() {
 
     // XHTML Basic 1.1
     doctype[XHTML_BASIC_11] = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN"` + eol
-    doctype[XHTML_BASIC_11] += `"http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">` + eol
+    doctype[XHTML_BASIC_11] += tab + `"http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">` + eol
 
     // MathML 2.0 - DTD
     doctype[MATH_ML20] = `<!DOCTYPE math PUBLIC "-//W3C//DTD MathML 2.0//EN"` + eol
