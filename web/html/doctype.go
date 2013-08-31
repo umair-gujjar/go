@@ -72,7 +72,7 @@ func init() {
 
     // MathML 1.01 - DTD
     doctype[MATH_ML_101] = `<!DOCTYPE math SYSTEM ` + eol
-    doctype[MATH_ML_101] += `"http://www.w3.org/Math/DTD/mathml1/mathml.dtd">` + eol
+    doctype[MATH_ML_101] += tab + `"http://www.w3.org/Math/DTD/mathml1/mathml.dtd">` + eol
 }
 
 // Returns the doctype by name
