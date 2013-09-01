@@ -38,11 +38,18 @@ type Tagger interface {
 type tag struct {
     ElementHandler
     doctype Doctype
+    styles map[string]string
+    classes []string
 }
 
 // NewTag returns a new html.NewTag to handle
 func NewTag(name string) *tag {
-    return &tag{NewElement(name, DefaultTagType), HTML5}
+    return &tag{
+        NewElement(name, DefaultTagType),
+        HTML5,
+        make(map[string]string),
+        make([]string, 0),
+    }
 }
 
 func (t *tag) SetDoctype(d Doctype) *tag {
@@ -54,8 +61,81 @@ func (t tag) GetDoctype() Doctype {
     return t.doctype
 }
 
+func (t *tag) SetId(name string) *tag {
+	t.SetAttr("id", name)
+	return t
+}
+
+func (t tag) GetId() string {
+	return t.GetAttr("id")
+}
+
+func (t *tag) SetStyle(propertie, val string) *tag {
+	t.styles[propertie] = val
+	return t
+}
+
+func (t *tag) GetStyle(propertie string) string {
+	if t.HasStyle(propertie) {
+		return t.GetAttr("style")
+	}
+	return ""
+}
+
+func (t tag) GetStyles() map[string]string {
+	return t.styles
+}
+
+func (t tag) HasStyle(propertie string) bool {
+	_, isOk := t.styles[propertie]
+	return isOk
+}
+
+func (t *tag) ResetStyle() *tag {
+	t.styles = make(map[string]string)
+	return t
+}
+
+func (t *tag) styleRender() *tag {
+	if len(t.GetStyles()) > 0 {
+		style := ""
+		for propertie, val := range t.GetStyles() {
+			style += fmt.Sprintf("%s: %s; ", propertie, val)
+		}
+		t.SetAttr("style", style[:len(style)-1])
+	}
+	return t
+}
+
+func (t *tag) SetClass(name string) *tag {
+	t.classes = append(t.classes, name)
+	return t
+}
+
+func (t tag) GetClasses() []string {
+	return t.classes
+}
+
+func (t *tag) ResetClass() *tag {
+	t.classes = make([]string, 0)
+	return t
+}
+
+func (t *tag) classesRender() *tag {
+	if len(t.classes) > 0 {
+		classes := ""
+		for _, class := range t.GetClasses() {
+			classes += fmt.Sprintf("%s ", class)
+		}
+		t.SetAttr("class", classes[:len(classes)-1])
+	}
+	return t
+}
+
 func (t tag) render() string {
     typeElem := t.GetType()
+
+	t.styleRender().classesRender()
 
     initAttribs := func() {
         if t.GetVal() != "" {
