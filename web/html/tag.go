@@ -38,7 +38,7 @@ type Tagger interface {
 type tag struct {
     ElementHandler
     doctype Doctype
-    styles map[string]string
+    styles  map[string]string
     classes []string
 }
 
@@ -52,90 +52,104 @@ func NewTag(name string) *tag {
     }
 }
 
+// Sets the type of the html document
 func (t *tag) SetDoctype(d Doctype) *tag {
     t.doctype = d
     return t
 }
 
+// Returns the type of the html document
 func (t tag) GetDoctype() Doctype {
     return t.doctype
 }
 
+// Sets the id of this tag
 func (t *tag) SetId(name string) *tag {
-	t.SetAttr("id", name)
-	return t
+    t.SetAttr("id", name)
+    return t
 }
 
+// Returns the id of this tag
 func (t tag) GetId() string {
-	return t.GetAttr("id")
+    return t.GetAttr("id")
 }
 
+// Sets the css style of this tag
 func (t *tag) SetStyle(propertie, val string) *tag {
-	t.styles[propertie] = val
-	return t
+    t.styles[propertie] = val
+    return t
 }
 
+// Returns the css style of this tag
 func (t *tag) GetStyle(propertie string) string {
-	if t.HasStyle(propertie) {
-		return t.GetAttr("style")
-	}
-	return ""
+    if t.HasStyle(propertie) {
+        return t.GetAttr("style")
+    }
+    return ""
 }
 
+// Returns all styles of this tag
 func (t tag) GetStyles() map[string]string {
-	return t.styles
+    return t.styles
 }
 
+// The style of this tag exist?
 func (t tag) HasStyle(propertie string) bool {
-	_, isOk := t.styles[propertie]
-	return isOk
+    _, isOk := t.styles[propertie]
+    return isOk
 }
 
+// Resets and removes all styles
 func (t *tag) ResetStyle() *tag {
-	t.styles = make(map[string]string)
-	return t
+    t.styles = make(map[string]string)
+    return t
 }
 
+// Initialize the rendering style of this tag
 func (t *tag) styleRender() *tag {
-	if len(t.GetStyles()) > 0 {
-		style := ""
-		for propertie, val := range t.GetStyles() {
-			style += fmt.Sprintf("%s: %s; ", propertie, val)
-		}
-		t.SetAttr("style", style[:len(style)-1])
-	}
-	return t
+    if len(t.GetStyles()) > 0 {
+        style := ""
+        for propertie, val := range t.GetStyles() {
+            style += fmt.Sprintf("%s: %s; ", propertie, val)
+        }
+        t.SetAttr("style", style[:len(style)-1])
+    }
+    return t
 }
 
+// The a class of this tag
 func (t *tag) SetClass(name string) *tag {
-	t.classes = append(t.classes, name)
-	return t
+    t.classes = append(t.classes, name)
+    return t
 }
 
+// Returns all classes of this tag
 func (t tag) GetClasses() []string {
-	return t.classes
+    return t.classes
 }
 
+// Resets and removes all classes of this tag
 func (t *tag) ResetClass() *tag {
-	t.classes = make([]string, 0)
-	return t
+    t.classes = make([]string, 0)
+    return t
 }
 
+// Initialize the rendering classes of this tag
 func (t *tag) classesRender() *tag {
-	if len(t.classes) > 0 {
-		classes := ""
-		for _, class := range t.GetClasses() {
-			classes += fmt.Sprintf("%s ", class)
-		}
-		t.SetAttr("class", classes[:len(classes)-1])
-	}
-	return t
+    if len(t.classes) > 0 {
+        classes := ""
+        for _, class := range t.GetClasses() {
+            classes += fmt.Sprintf("%s ", class)
+        }
+        t.SetAttr("class", classes[:len(classes)-1])
+    }
+    return t
 }
 
 func (t tag) render() string {
     typeElem := t.GetType()
 
-	t.styleRender().classesRender()
+    t.styleRender().classesRender()
 
     initAttribs := func() {
         if t.GetVal() != "" {
