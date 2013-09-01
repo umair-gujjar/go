@@ -4,9 +4,32 @@
 
 package html
 
+type Class interface {
+    SetClass(string) *Class
+    GetClasses() []string
+    ResetClass() *Class
+}
+
+type Style interface {
+    SetStyle(propertie, val string)
+    GetStyle(string) string
+    GetStyles() map[string]string
+    HasStyle(string) bool
+    ResetStyle() *Style
+}
+
+type Css interface {
+    Class
+    Style
+}
+
 type css struct {
     styles  map[string]string
     classes []string
+}
+
+func NewCSS() *css {
+    return &css{make(map[string]string), make([]string, 0)}
 }
 
 // Sets the css style of this tag
