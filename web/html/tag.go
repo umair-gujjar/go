@@ -6,6 +6,16 @@ package html
 
 import "fmt"
 
+type TagType uint16
+type ElemTag string
+
+const (
+    TYPE_TXT                TagType = 1 << iota
+    TYPE_CLOSED             TagType = 1 << iota
+    TYPE_SELF_CLOSED        TagType = 1 << iota
+    TYPE_SELF_CLOSED_STRICT TagType = 1 << iota
+)
+
 const (
     TAG_TXT                ElemTag = "%s"
     TAG_CLOSED             ElemTag = "<%s%s>%s</%s>"
@@ -17,13 +27,11 @@ type Displayer interface {
     Render() string
 }
 
-type ElemTag string
-
 // Map of tags
-var Tags map[ElemType]ElemTag
+var Tags map[TagType]ElemTag
 
 func init() {
-    Tags = make(map[ElemType]ElemTag)
+    Tags = make(map[TagType]ElemTag)
     Tags[TYPE_TXT] = TAG_TXT
     Tags[TYPE_CLOSED] = TAG_CLOSED
     Tags[TYPE_SELF_CLOSED] = TAG_SELF_CLOSED
@@ -33,19 +41,36 @@ func init() {
 type Tagger interface {
     ElementHandler
     Displayer
+    SetId(string)
+    GetId(string)
+    SetType(TagType) *tag
+    GetType() TagType
 }
 
 type tag struct {
     ElementHandler
     doctype Doctype
+    tagType TagType
 }
 
 // NewTag returns a new html.NewTag to handle
 func NewTag(name string) *tag {
     return &tag{
-        NewElement(name, DefaultTagType),
+        NewElement(name),
         HTML5,
+        DefaultTagType,
     }
+}
+
+// Set the tag type of this element
+func (t *tag) SetType(tagType TagType) *tag {
+    t.tagType = tagType
+    return t
+}
+
+// Return the tag type of this element
+func (t tag) GetType() TagType {
+    return t.tagType
 }
 
 // Sets the type of the html document
@@ -71,9 +96,7 @@ func (t tag) GetId() string {
 }
 
 func (t tag) render() string {
-    typeElem := t.GetType()
-
-    //t.styleRender().classesRender()
+    tagType := t.GetType()
 
     initAttribs := func() {
         if t.GetVal() != "" {
@@ -83,7 +106,7 @@ func (t tag) render() string {
 
     getAttrsToString := func() string {
         var attrs string
-        if t.SizeAttrs() > 0 {
+        if t.LenAttrs() > 0 {
             for _, attr := range t.GetAttrs() {
                 attrs += fmt.Sprintf(`%s="%s" `, attr.GetName(), attr.GetVal())
             }
@@ -92,7 +115,7 @@ func (t tag) render() string {
         return attrs
     }
 
-    switch tag := string(Tags[typeElem]); typeElem {
+    switch tag := string(Tags[tagType]); tagType {
     case TYPE_TXT:
         return fmt.Sprintf(tag, t.GetVal())
     case TYPE_CLOSED:

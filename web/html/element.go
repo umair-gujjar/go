@@ -4,15 +4,6 @@
 
 package html
 
-type ElemType uint16
-
-const (
-    TYPE_TXT                 ElemType = 1 << iota
-    TYPE_CLOSED              ElemType = 1 << iota
-    TYPE_SELF_CLOSED         ElemType = 1 << iota
-    TYPE_SELF_CLOSED_STRICT  ElemType = 1 << iota
-)
-
 // Represents the interface of a html element
 type ElementHandler interface {
     SetName(name string) *element
@@ -23,26 +14,22 @@ type ElementHandler interface {
     HasAttr(name string) bool
     DelAttr(name string) *element
     ResetAttrs() *element
-    SizeAttrs() int
+    LenAttrs() int
     SetVal(val string) *element
     GetVal() string
-    SetType(elemType ElemType) *element
-    GetType() ElemType
 }
 
 type element struct {
-    name    string
-    attrs   map[string]*attr
-    val     string
-    tagType ElemType
+    name  string
+    attrs map[string]*attr
+    val   string
 }
 
 // Creating a new element
-func NewElement(name string, tagType ElemType) *element {
+func NewElement(name string) *element {
     return &element{
-        name:    name,
-        attrs:   make(map[string]*attr),
-        tagType: tagType,
+        name:  name,
+        attrs: make(map[string]*attr),
     }
 }
 
@@ -105,7 +92,7 @@ func (e *element) ResetAttrs() *element {
 }
 
 // Return the number of attributes of this element
-func (e element) SizeAttrs() int {
+func (e element) LenAttrs() int {
     return len(e.attrs)
 }
 
@@ -118,15 +105,4 @@ func (e *element) SetVal(val string) *element {
 // Return the value of this element
 func (e element) GetVal() string {
     return e.val
-}
-
-// Set the tag type of this element
-func (e *element) SetType(tagType ElemType) *element {
-    e.tagType = tagType
-    return e
-}
-
-// Return the tag type of this element
-func (e element) GetType() ElemType {
-    return e.tagType
 }

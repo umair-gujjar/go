@@ -4,23 +4,22 @@
 
 package html
 
-type Class interface {
-    SetClass(string) *Class
+type Classer interface {
+    SetClass(string) *Classer
     GetClasses() []string
-    ResetClass() *Class
+    ResetClass() *Classer
 }
 
-type Style interface {
+type InlineStyler interface {
     SetStyle(propertie, val string)
     GetStyle(string) string
     GetStyles() map[string]string
     HasStyle(string) bool
-    ResetStyle() *Style
+    ResetStyle() *InlineStyler
 }
-
 type Css interface {
-    Class
-    Style
+    Classer
+    InlineStyler
 }
 
 type css struct {

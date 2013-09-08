@@ -5,7 +5,7 @@
 package html
 
 var DefaultDoctype Doctype
-var DefaultTagType ElemType
+var DefaultTagType TagType
 
 func init() {
     DefaultDoctype = HTML5
