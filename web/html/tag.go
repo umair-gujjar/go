@@ -41,8 +41,8 @@ func init() {
 type Tagger interface {
     ElementHandler
     Displayer
-    SetId(string)
-    GetId(string)
+    SetId(string) *tag
+    GetId() string
     SetType(TagType) *tag
     GetType() TagType
 }
@@ -85,8 +85,8 @@ func (t tag) GetDoctype() Doctype {
 }
 
 // Sets the id of this tag
-func (t *tag) SetId(name string) *tag {
-    t.SetAttr("id", name)
+func (t *tag) SetId(id string) *tag {
+    t.SetAttr("id", id)
     return t
 }
 
@@ -95,7 +95,19 @@ func (t tag) GetId() string {
     return t.GetAttr("id")
 }
 
-func (t tag) render() string {
+// Returns the attributes from tagger to string
+func GetAttrsToString(t Tagger) string {
+    var attrs string
+    if t.LenAttrs() > 0 {
+        for _, attr := range t.GetAttrs() {
+            attrs += fmt.Sprintf(`%s="%s" `, attr.GetName(), attr.GetVal())
+        }
+        attrs = " " + attrs[:(len(attrs)-1)]
+    }
+    return attrs
+}
+
+func (t *tag) render() string {
     tagType := t.GetType()
 
     initAttribs := func() {
@@ -104,28 +116,17 @@ func (t tag) render() string {
         }
     }
 
-    getAttrsToString := func() string {
-        var attrs string
-        if t.LenAttrs() > 0 {
-            for _, attr := range t.GetAttrs() {
-                attrs += fmt.Sprintf(`%s="%s" `, attr.GetName(), attr.GetVal())
-            }
-            attrs = " " + attrs[:(len(attrs)-1)]
-        }
-        return attrs
-    }
-
     switch tag := string(Tags[tagType]); tagType {
     case TYPE_TXT:
         return fmt.Sprintf(tag, t.GetVal())
     case TYPE_CLOSED:
-        return fmt.Sprintf(tag, t.GetName(), getAttrsToString(), t.GetVal(), t.GetName())
+        return fmt.Sprintf(tag, t.GetName(), GetAttrsToString(t), t.GetVal(), t.GetName())
     case TYPE_SELF_CLOSED, TYPE_SELF_CLOSED_STRICT:
         initAttribs()
-        return fmt.Sprintf(tag, t.GetName(), getAttrsToString())
+        return fmt.Sprintf(tag, t.GetName(), GetAttrsToString(t))
     default:
         initAttribs()
-        return fmt.Sprintf(string(TAG_SELF_CLOSED), t.GetName(), getAttrsToString())
+        return fmt.Sprintf(string(TAG_SELF_CLOSED), t.GetName(), GetAttrsToString(t))
     }
 }
 
