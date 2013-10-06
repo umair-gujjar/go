@@ -4,45 +4,109 @@
 
 package html
 
-type Classer interface {
-    SetClass(string) *Classer
-    GetClasses() []string
-    ResetClass() *Classer
-}
+type Classes []string
+type Styles map[string]string
 
-type InlineStyler interface {
-    SetStyle(propertie, val string)
+type Styler interface {
+    SetClass(string) *css
+    HasClass(string) (int, bool)
+    SetClasses(Classes) *css
+    GetClasses() Classes
+    DelClass(string) *css
+    ResetClass() *css
+    SetStyle(property, val string) *css
     GetStyle(string) string
-    GetStyles() map[string]string
+    SetStyles(Styles)
+    GetStyles() Styles
     HasStyle(string) bool
-    ResetStyle() *InlineStyler
-}
-type Css interface {
-    Classer
-    InlineStyler
+    DelStyle(string) *css
+    ResetStyle()
 }
 
 type css struct {
-    styles  map[string]string
-    classes []string
+    classes Classes
+    styles  Styles
 }
 
 func NewCSS() *css {
-    return &css{make(map[string]string), make([]string, 0)}
+    return &css{make(Classes, 0), make(Styles)}
+}
+
+// Set a new class
+func (c *css) SetClass(name string) *css {
+    c.classes = append(c.classes, name)
+    return c
+}
+
+// Checks if the class exists.
+// If the classes are the function returns its index and true,
+// otherwise it returns 0 and false.
+func (c css) HasClass(name string) (int, bool) {
+    for i, clsName := range c.GetClasses() {
+        if clsName == name {
+            return i, true
+        }
+    }
+    return 0, false
+}
+
+// Delete a class
+func (c *css) DelClass(name string) *css {
+    if i, ok := c.HasClass(name); ok {
+        copy(c.classes[i:], c.classes[i+1:])
+        c.classes[len(c.classes)-1] = ""
+        c.classes = c.classes[:len(c.classes)-1]
+    }
+    return c
+}
+
+// Set some classes
+func (c *css) SetClasses(classes []string) *css {
+    c.classes = classes
+    return c
+}
+
+// Returns all classes
+func (c css) GetClasses() []string {
+    return c.classes
+}
+
+// Resets all classes
+func (c *css) ResetClass() *css {
+    c.classes = make([]string, 0)
+    return c
+}
+
+// Initialize the rendering classes
+func (c *css) classesToString() string {
+    if len(c.classes) > 0 {
+        classes := ""
+        for _, class := range c.GetClasses() {
+            classes += class + " "
+        }
+        return classes[:len(classes)-1]
+    }
+    return ""
 }
 
 // Sets the css style of this tag
-func (c *css) SetStyle(propertie, val string) *css {
-    c.styles[propertie] = val
+func (c *css) SetStyle(property, val string) *css {
+    c.styles[property] = val
     return c
 }
 
 // Returns the css style of this tag
-func (c *css) GetStyle(propertie string) string {
-    if c.HasStyle(propertie) {
+func (c *css) GetStyle(property string) string {
+    if c.HasStyle(property) {
         return c.styles["style"]
     }
     return ""
+}
+
+// Set some styles
+func (c *css) SetStyles(styles Styles) *css {
+    c.styles = styles
+    return c
 }
 
 // Returns all styles of this tag
@@ -50,10 +114,18 @@ func (c css) GetStyles() map[string]string {
     return c.styles
 }
 
+// Deletes a style property
+func (c *css) DelStyle(property string) *css {
+    if c.HasStyle(property) {
+        delete(c.styles, property)
+    }
+    return c
+}
+
 // The style of this tag exist?
-func (c css) HasStyle(propertie string) bool {
-    _, isOk := c.styles[propertie]
-    return isOk
+func (c css) HasStyle(property string) bool {
+    _, ok := c.styles[property]
+    return ok
 }
 
 // Resets and removes all styles
@@ -63,42 +135,25 @@ func (c *css) ResetStyle() *css {
 }
 
 // Initialize the rendering style of this tag
-func (c *css) styleRender() string {
+func (c *css) styleToString() string {
     if len(c.GetStyles()) > 0 {
         style := ""
-        for propertie, val := range c.GetStyles() {
-            style += propertie + ":" + val + ";"
+        for property, val := range c.GetStyles() {
+            style += property + ": " + val + "; "
         }
         return style[:len(style)-1]
     }
     return ""
 }
 
-// The a class of this tag
-func (c *css) SetClass(name string) *css {
-    c.classes = append(c.classes, name)
-    return c
-}
-
-// Returns all classes of this tag
-func (c css) GetClasses() []string {
-    return c.classes
-}
-
-// Resets and removes all classes of this tag
-func (c *css) ResetClass() *css {
-    c.classes = make([]string, 0)
-    return c
-}
-
-// Initialize the rendering classes of this tag
-func (c *css) classesRender() string {
+// Applies a css element
+func (c *css) ApplyTo(e ElementHandler) *css {
     if len(c.classes) > 0 {
-        classes := ""
-        for _, class := range c.GetClasses() {
-            classes += class + " "
-        }
-        return classes[:len(classes)-1]
+        e.SetAttr("class", c.classesToString())
     }
-    return ""
+
+    if len(c.styles) > 0 {
+        e.SetAttr("style", c.styleToString())
+    }
+    return c
 }
