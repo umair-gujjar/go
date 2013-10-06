@@ -7,5 +7,5 @@ package html
 var DefaultDoctype Doctype
 
 func init() {
-	DefaultDoctype = HTML5
+    DefaultDoctype = HTML5
 }
