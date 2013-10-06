@@ -135,7 +135,7 @@ func (c *css) ResetStyle() *css {
 }
 
 // Initialize the rendering style of this tag
-func (c *css) styleToString() string {
+func (c *css) stylesToString() string {
     if len(c.GetStyles()) > 0 {
         style := ""
         for property, val := range c.GetStyles() {
@@ -151,9 +151,8 @@ func (c *css) ApplyTo(e ElementHandler) *css {
     if len(c.classes) > 0 {
         e.SetAttr("class", c.classesToString())
     }
-
     if len(c.styles) > 0 {
-        e.SetAttr("style", c.styleToString())
+        e.SetAttr("style", c.stylesToString())
     }
     return c
 }
