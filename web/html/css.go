@@ -73,7 +73,7 @@ func (c css) GetClasses() []string {
 
 // Resets all classes
 func (c *css) ResetClass() *css {
-    c.classes = make([]string, 0)
+    c.classes = make(Classes, 0)
     return c
 }
 
@@ -89,13 +89,13 @@ func (c *css) classesToString() string {
     return ""
 }
 
-// Sets the css style of this tag
+// Sets the css style
 func (c *css) SetStyle(property, val string) *css {
     c.styles[property] = val
     return c
 }
 
-// Returns the css style of this tag
+// Returns the css style
 func (c *css) GetStyle(property string) string {
     if c.HasStyle(property) {
         return c.styles["style"]
@@ -109,7 +109,7 @@ func (c *css) SetStyles(styles Styles) *css {
     return c
 }
 
-// Returns all styles of this tag
+// Returns all styles
 func (c css) GetStyles() Styles {
     return c.styles
 }
@@ -122,19 +122,19 @@ func (c *css) DelStyle(property string) *css {
     return c
 }
 
-// The style of this tag exist?
+// The style exists?
 func (c css) HasStyle(property string) bool {
     _, ok := c.styles[property]
     return ok
 }
 
-// Resets and removes all styles
+// Resets all styles
 func (c *css) ResetStyle() *css {
-    c.styles = make(map[string]string)
+    c.styles = make(Styles)
     return c
 }
 
-// Initialize the rendering style of this tag
+// Initialize the rendering style
 func (c *css) stylesToString() string {
     if len(c.GetStyles()) > 0 {
         style := ""
