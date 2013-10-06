@@ -5,8 +5,8 @@
 package form
 
 import (
-   "validate"
-   "web/html"
+    "validate"
+    "web/html"
 )
 
 type ElementType string
@@ -14,7 +14,7 @@ type ElementType string
 const (
     TYPE_BUTTON   ElementType = "button"
     TYPE_CHECKBOX ElementType = "checkbox"
-    TYPE_DATE	  ElementType = "date"
+    TYPE_DATE     ElementType = "date"
     TYPE_EMAIL    ElementType = "email"
     TYPE_FILE     ElementType = "file"
     TYPE_HIDDEN   ElementType = "hidden"
@@ -32,7 +32,7 @@ const (
 
 type element struct {
     Type ElementType
-	html.Tagger
+    html.Tagger
     validators []validate.Validater
 }
 
@@ -41,7 +41,7 @@ func newElement(elemType ElementType, name string, tag html.TagType) *element {
 }
 
 func newInput(inputType ElementType) *element {
-	return newElement(inputType, "input", html.TYPE_SELF_CLOSED_STRICT)
+    return newElement(inputType, "input", html.TYPE_SELF_CLOSED_STRICT)
 }
 
 func NewButton(name string) *element {
@@ -51,10 +51,7 @@ func NewButton(name string) *element {
 }
 
 func NewText(name string) *element {
-	e := newInput(TYPE_TEXT)
-	e.SetAttr("name", name)
+    e := newInput(TYPE_TEXT)
+    e.SetAttr("name", name)
     return e
 }
-
-
-

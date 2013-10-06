@@ -7,7 +7,7 @@ package form
 var validGlobalAttrs map[string]bool
 
 func init() {
-	validGlobalAttrs = make(map[string]bool)
+    validGlobalAttrs = make(map[string]bool)
     validGlobalAttrs["accesskey"] = true
     validGlobalAttrs["class"] = true
     validGlobalAttrs["checked"] = true
