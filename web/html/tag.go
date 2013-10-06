@@ -6,20 +6,20 @@ package html
 
 import "fmt"
 
-type tagType uint16
+type TagType uint16
 
 const (
-    TYPE_OPEN               tagType = 1 << iota
-    TYPE_CLOSE              tagType = 1 << iota
-    TYPE_OPEN_CLOSE         tagType = 1 << iota
-    TYPE_SELF_CLOSED_STRICT tagType = 1 << iota
+    TYPE_OPEN               TagType = 1 << iota
+    TYPE_CLOSE              TagType = 1 << iota
+    TYPE_OPEN_CLOSE         TagType = 1 << iota
+    TYPE_SELF_CLOSED_STRICT TagType = 1 << iota
 )
 
 // Map of tags
-var tagsFormat map[tagType]string
+var tagsFormat map[TagType]string
 
 func init() {
-    tagsFormat = make(map[tagType]string)
+    tagsFormat = make(map[TagType]string)
     tagsFormat[TYPE_OPEN] = "<%s%s>"
     tagsFormat[TYPE_CLOSE] = "</%s>"
     tagsFormat[TYPE_OPEN_CLOSE] = tagsFormat[TYPE_OPEN] + "%s" + tagsFormat[TYPE_CLOSE]
@@ -34,18 +34,18 @@ type Tagger interface {
     ElementHandler
     SetId(string) *tag
     GetId() string
-    SetType(tagType) *tag
-    GetType() tagType
+    SetType(TagType) *tag
+    GetType() TagType
     Displayer
 }
 
 type tag struct {
     ElementHandler
-    Tagtype tagType
+    Tagtype TagType
 }
 
 // NewTag returns a new html.NewTag to handle
-func NewTag(name string, tagtype tagType) *tag {
+func NewTag(name string, tagtype TagType) *tag {
     return &tag{NewElement(name), tagtype}
 }
 
@@ -61,13 +61,13 @@ func (t tag) GetId() string {
 }
 
 // Sets the type of tag
-func (t *tag) SetType(tagtype tagType) *tag {
+func (t *tag) SetType(tagtype TagType) *tag {
     t.Tagtype = tagtype
     return t
 }
 
 // Returns the type of tag.
-func (t tag) GetType() tagType {
+func (t tag) GetType() TagType {
     return t.Tagtype
 }
 
