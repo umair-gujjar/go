@@ -72,11 +72,11 @@ func (t tag) GetType() tagType {
 }
 
 // Returns the attributes from tagger to string
-func getAttrsToString(t Tagger) string {
+func getAttrsToString(e ElementHandler) string {
     var attrs string
-    if t.LenAttrs() > 0 {
-        for _, attr := range t.GetAttrs() {
-            attrs += fmt.Sprintf(`%s="%s" `, attr.GetName(), attr.GetVal())
+    if e.LenAttrs() > 0 {
+        for _, attr := range e.GetAttrs() {
+            attrs += attr.ToString() + " "
         }
         attrs = " " + attrs[:(len(attrs)-1)]
     }

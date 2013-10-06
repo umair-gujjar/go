@@ -36,3 +36,8 @@ func (a *attr) SetVal(val string) *attr {
 func (a attr) GetVal() string {
     return a.val
 }
+
+// Returns a string attribute
+func (a attr) ToString() string {
+    return a.GetName() + `="` + a.GetVal() + `"`
+}
