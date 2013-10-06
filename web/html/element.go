@@ -14,7 +14,7 @@ type ElementHandler interface {
     GetLabel() string
     SetOption(key string, val interface{}) *element
     GetOption(key string) interface{}
-    RemoveOption(key string) *element
+    DelOption(key string) *element
     SetOptions(opt options) *element
     GetOptions() options
     SetAttr(name string, val string) *element
@@ -87,7 +87,7 @@ func (e element) GetOption(key string) interface{} {
 }
 
 // Remove an option of this element
-func (e *element) RemoveOption(key string) *element {
+func (e *element) DelOption(key string) *element {
     if _, ok := e.opts[key]; ok {
         delete(e.opts, key)
     }
