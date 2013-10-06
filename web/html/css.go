@@ -16,7 +16,7 @@ type Styler interface {
     ResetClass() *css
     SetStyle(property, val string) *css
     GetStyle(string) string
-    SetStyles(Styles)
+    SetStyles(Styles) *css
     GetStyles() Styles
     HasStyle(string) bool
     DelStyle(string) *css
@@ -110,7 +110,7 @@ func (c *css) SetStyles(styles Styles) *css {
 }
 
 // Returns all styles of this tag
-func (c css) GetStyles() map[string]string {
+func (c css) GetStyles() Styles {
     return c.styles
 }
 
